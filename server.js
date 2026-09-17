@@ -1,5 +1,10 @@
-//we will start server here
+//we will start server here in this file:
+
+require("dotenv").config(); // now we can use process.env.(variable name defined in .envfile)
 const app=require("./src/app")
+const connectToDB=require("./src/Config/db")
+
+connectToDB();
 
 const PORT=5000; // or use 3000
 
