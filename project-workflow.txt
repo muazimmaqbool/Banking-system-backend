@@ -1,0 +1,24 @@
+# Banking System Backend - Project Workflow
+
+## 1. Project Initialization
+0. Installed `express` to build the backend web server and API routes.
+1. Initialized the Node.js project with `npm init -y`, which created the project configuration in `package.json`.
+2. Initialized Git with `git init` to track project changes.
+
+## 2. Project Structure and Files
+
+3. Created the `src` folder to organize the application's source code.
+4. Created `src/app.js` to configure the Express application and middleware.
+5. Created `server.js` in the project root to start the backend server and listen for incoming requests.
+6. Created the `src/Config` folder for application configuration files.
+7. Created `src/Config/db.js` to configure and establish the MongoDB database connection using Mongoose.
+
+## 3. Installed Dependencies
+
+8. Installed `mongoose` to connect to and work with the MongoDB database.
+9. Installed `dotenv` to load environment variables from the `.env` file.
+
+## 4. Database Configuration
+
+10. Set up the database connection in `src/Config/db.js` using Mongoose.
+11. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.
