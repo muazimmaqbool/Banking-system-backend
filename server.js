@@ -6,18 +6,18 @@ const connectToDB=require("./src/Config/db")
 
 connectToDB();
 
-const PORT=5000; // or use 3000
+const PORT=3000; // or use 5000
 
 //for testing whether the server is working or not
 
 app.get("/",(req,res)=>{
     res.send("Banking server is working")
 })
-//http://localhost:5000/
+//http://localhost:3000/
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port: ${PORT}`)
-    console.log("click here: http://localhost:5000")
+    console.log("click here: http://localhost:3000")
 })
 
 
