@@ -74,6 +74,6 @@ userSchema.pre("save", async function (next) {
       throw err;
     }
   };
-  const User = mongoose.model("User", userSchema);
-  module.exports = User;
+  const userModel= mongoose.model("user", userSchema);
+  module.exports =userModel;
 });
