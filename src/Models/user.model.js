@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-//this will be called just before saving user
+//this will be called just before saving user (it's also an middle ware)
 userSchema.pre("save", async function (next) {
   //checking if password is modified or not and if not modified then saving without hashing password
   if (!this.isModified("password")) {
@@ -74,6 +74,7 @@ userSchema.pre("save", async function (next) {
       throw err;
     }
   };
+  
   const userModel= mongoose.model("user", userSchema);
   module.exports =userModel;
 });

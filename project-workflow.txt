@@ -12,13 +12,22 @@
 5. Created `server.js` in the project root to start the backend server and listen for incoming requests.
 6. Created the `src/Config` folder for application configuration files.
 7. Created `src/Config/db.js` to configure and establish the MongoDB database connection using Mongoose.
+8. Created `src/Models/user.model.js` to define the basic user schema for the banking system.
 
 ## 3. Installed Dependencies
 
-8. Installed `mongoose` to connect to and work with the MongoDB database.
-9. Installed `dotenv` to load environment variables from the `.env` file.
+9. Installed `mongoose` to connect to and work with the MongoDB database.
+10. Installed `dotenv` to load environment variables from the `.env` file.
+11. Installed `bcryptjs` to securely hash and compare user passwords.
 
-## 4. Database Configuration
+## 4. User Model and Password Management
 
-10. Set up the database connection in `src/Config/db.js` using Mongoose.
-11. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.
+12. Defined the `User` schema in `src/Models/user.model.js` with fields such as `email`, `name`, and `password`.
+13. Added validation rules for required values, email format, uniqueness, and minimum password length.
+14. Added a pre-save hook to hash the user's password with `bcryptjs` before saving to the database.
+15. Added a `comparePassword` method to compare a typed-in password with the hashed password during login.
+
+## 5. Database Configuration
+
+16. Set up the database connection in `src/Config/db.js` using Mongoose.
+17. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.
