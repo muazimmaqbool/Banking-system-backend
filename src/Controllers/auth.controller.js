@@ -27,6 +27,19 @@ async function userRegisterController(req,res){
 
     const payLoad={userId:user._id}
     //returning with jwt token
-    const token=generateToken(payload)
+    const token=generateToken(payLoad);
+
+    //now saving token in cookie
+    res.cookies("token",token)
+
+    //finall response after everything done
+    res.status(201).json({
+        user:{
+            _id:user._id,
+            name:user.name,
+            email:user.email,
+        },
+        token:token
+    })
 }
 module.exports={userRegisterController};
