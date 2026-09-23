@@ -10,4 +10,7 @@ const authController=require("../Controllers/auth.controller")
 
 router.post("/register",authController.userRegisterController)
 
+/* login api: POST : /api/auth/login */
+router.post("/login",authController.userLoginController)
+
 module.exports=router
