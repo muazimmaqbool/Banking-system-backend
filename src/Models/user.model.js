@@ -32,17 +32,17 @@ const userSchema = new mongoose.Schema(
 );
 
 //this will be called just before saving user (it's also an middle ware)
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   //checking if password is modified or not and if not modified then saving without hashing password
   if (!this.isModified("password")) {
-    return next();
+    return
   }
 
   //if password is changed or new password added hasing the password before saving it using bcrypt library
   const hash = await bcrypt.hash(this.password, 10); // 10 is salt of size 10
   this.password = hash;
   //we converted password to hash and then saved hash in password
-  return next();
+  return
   //or
   /*
   try {
@@ -62,8 +62,9 @@ userSchema.pre("save", async function (next) {
     return next(err);
   }
   */
+});
 
-  //method comparePassword used to compare password entered by the user with the hashed password in db
+ //method comparePassword used to compare password entered by the user with the hashed password in db
   userSchema.methods.comparePassword = async function (candidatePassword) {
     try {
       // console.log("candidatePassword:",candidatePassword)
@@ -74,7 +75,8 @@ userSchema.pre("save", async function (next) {
       throw err;
     }
   };
+
+
   
   const userModel= mongoose.model("user", userSchema);
   module.exports =userModel;
-});
