@@ -65,7 +65,7 @@ async function userLoginController(req, res) {
   //user is not found that's email not found in db
   if (!user) {
     return res.status(401).json({
-      message: "Email or password is INVALID",
+      message: "Email is INVALID",
     });
   }
 
@@ -74,7 +74,7 @@ async function userLoginController(req, res) {
 
   if (!isValidPassword) {
     return res.status(401).json({
-      message: "Email or password is INVALID",
+      message: "Password is INVALID",
     });
   }
 
