@@ -19,15 +19,33 @@
 9. Installed `mongoose` to connect to and work with the MongoDB database.
 10. Installed `dotenv` to load environment variables from the `.env` file.
 11. Installed `bcryptjs` to securely hash and compare user passwords.
+12. Installed `jsonwebtoken` to create and verify access tokens for authenticated user requests.
 
 ## 4. User Model and Password Management
 
-12. Defined the `User` schema in `src/Models/user.model.js` with fields such as `email`, `name`, and `password`.
-13. Added validation rules for required values, email format, uniqueness, and minimum password length.
-14. Added a pre-save hook to hash the user's password with `bcryptjs` before saving to the database.
-15. Added a `comparePassword` method to compare a typed-in password with the hashed password during login.
+13. Defined the `User` schema in `src/Models/user.model.js` with fields such as `email`, `name`, and `password`.
+14. Added validation rules for required values, email format, uniqueness, and minimum password length.
+15. Added a pre-save hook to hash the user's password with `bcryptjs` before saving to the database.
+16. Added a `comparePassword` method to compare a typed-in password with the hashed password during login.
+17. Set the `password` field to `select: false` by default so it does not return in normal queries, and explicitly select it during login for comparison.
 
-## 5. Database Configuration
+## 5. Authentication Routes and Controllers
 
-16. Set up the database connection in `src/Config/db.js` using Mongoose.
-17. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.
+18. Created `src/Routes/auth.routes.js` with the user authentication endpoints:
+    - `POST /api/auth/register` for new user signup.
+    - `POST /api/auth/login` for user login.
+19. Connected both routes to `src/Controllers/auth.controller.js` to handle request validation, user creation, login logic, and JWT generation.
+20. In the registration controller, the system checks whether the email already exists, creates a new user, generates a JWT token using the user ID as the payload, stores the token in a cookie, and returns the created user data plus the token.
+21. In the login controller, the app searches the user by email, retrieves the hashed password using `.select("+password")`, compares the entered password with `user.comparePassword(password)`, and returns a 401 response if the password is invalid.
+
+## 6. JWT Token Generation and Middleware
+
+22. Created `src/Config/jwt.js` to centralize JWT logic for the backend.
+23. Added a `generateToken(userData)` function that signs a new JWT using `jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "3d" })`.
+24. Added `jwtAuthMiddleware` to read the `Authorization` header, verify the token, attach the decoded payload to `req.user`, and reject unauthorized access with a 401 status when the token is missing or invalid.
+25. The JWT is generated and returned on both registration and login so the user can authenticate subsequent protected API requests.
+
+## 7. Database Configuration
+
+26. Set up the database connection in `src/Config/db.js` using Mongoose.
+27. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.

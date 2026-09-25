@@ -77,7 +77,7 @@ async function userLoginController(req, res) {
       message: "Password is INVALID",
     });
   }
-
+  
   //user is valid
   const payLoad = { userId: user._id };
   const token = generateToken(payLoad);
