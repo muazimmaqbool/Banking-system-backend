@@ -17,7 +17,7 @@ app.use(cookieParser())
 // middleware used to save token in cookie check auth.controller.js file
 
 
-//Importing Routes
+/** Importing Routes */
 const authRouter=require("./Routes/auth.routes")
 const accountRouter=require("./Routes/account.routes")
 

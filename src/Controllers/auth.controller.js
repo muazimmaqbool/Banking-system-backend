@@ -1,6 +1,5 @@
 const userModel = require("../Models/user.model");
-const jwt = require("jsonwebtoken");
-const { jwtAuthMiddleware, generateToken } = require("../Config/jwt");
+const { jwtAuthMiddleware, generateToken } = require("../middleware/jwt");
 const emailService=require("../services/email")
 
 //user register controller

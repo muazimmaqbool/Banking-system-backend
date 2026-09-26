@@ -1,16 +1,18 @@
 const jwt =require('jsonwebtoken')
 
-//creating middleware (this middle when passed to any route will make sure that whoever route you are accessing needs a token and then
-//                      verifies the token if token is provided)
-const jwtAuthMiddleware=(req,res,next)=>{
-    //check the request header has authorization or not:
-    const authorization=req.headers.authorization
-    if(!authorization) return res.status(401).json({error:"Token Not Found!"})
-    //extracting token from header
-    const token=req.headers.authorization.split(' ')[1]; 
+//creating middleware 
+//this middleware is used to check whether the user is loggedin or not 
+//(via jwt tokwn) which we returned during login and it gets saved in cookies
+//so we will check whether it's inside cookies or not
+const jwtAuthMiddleware=async(req,res,next)=>{
+    //checking both cookies and the request header has authorization token or not:
+    const token=req.cookies.token || req.headers.authorization?.split(" ")[1]
+
+    if(!token) return res.status(401).json({error:"Token Not Found!"})
+
     //if token is not passed:
     if(!token){
-        res.status(401).json({error:'Unauthorized'})
+        res.status(401).json({error:'Unauthorized access, token is missing'})
     }
 
     //when token is present:
@@ -18,12 +20,14 @@ const jwtAuthMiddleware=(req,res,next)=>{
         //verifying the JWT token: it will return decoded payload
         const decodedPayload=jwt.verify(token,process.env.JWT_SECRET_KEY)
 
-        //returing the decodedPayload to the user
-        req.user=decodedPayload // req.payload=decode or req.user=decoded or req.endcoded etc
+        //this decodedPayload contains userId as when generating token inside auth.controller we gave it payload as userId
+        //now finding user details by this userid
+        const user=await userModel.findById(decodedPayload.userId)
+        req.user=user
         next()
     } catch (error) {
         console.log(`Error in jwtAuthMiddleware: ${error}`)
-        res.status(401),json({error:"Invalid Token"})
+        res.status(401).json({error:"Invalid Token"})
     }
 }
 
