@@ -26,8 +26,13 @@ const accountSchema=new mongoose.Schema({
     timestamps:true
 })
 
-const accountModel=mongoose.model("account",accountSchema);
-module.exports=accountModel;
+// Creating a compound index on user + status to make queries like
+// "find accounts for this user and status" faster and more efficient.
+accountSchema.index({ user: 1, status: 1 });
+
+
+const accountModel = mongoose.model("account", accountSchema);
+module.exports = accountModel;
 
 //Extra:
 /*
