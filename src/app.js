@@ -4,8 +4,7 @@
 const express=require("express");
 const cookieParser=require("cookie-parser")
 
-//using auth routes
-const authRouter=require("./Routes/auth.routes")
+
 
 //this app constant will have access to all express methods
 const app=express(); //creating server
@@ -17,7 +16,13 @@ app.use(express.json())
 app.use(cookieParser()) 
 // middleware used to save token in cookie check auth.controller.js file
 
-//every api requires whose endpoint contains: /api/auth will be redirected to authRouter
+
+//Importing Routes
+const authRouter=require("./Routes/auth.routes")
+const accountRouter=require("./Routes/account.routes")
+
+//Using Routes
 app.use("/api/auth",authRouter)
+app.use("/api/accounts",accountRouter)
 
 module.exports=app
