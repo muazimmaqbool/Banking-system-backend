@@ -1,6 +1,7 @@
 const userModel = require("../Models/user.model");
 const jwt = require("jsonwebtoken");
 const { jwtAuthMiddleware, generateToken } = require("../Config/jwt");
+const emailService=require("../services/email")
 
 //user register controller
 //will be used with this api: /api/auth/register inside app.routes.js file
@@ -47,6 +48,9 @@ async function userRegisterController(req, res) {
     },
     token: token,
   });
+
+  //sending email
+  await emailService.sendRegistrationEmail(user.name, user.email)
 }
 
 //controller for login user:
@@ -77,7 +81,7 @@ async function userLoginController(req, res) {
       message: "Password is INVALID",
     });
   }
-  
+
   //user is valid
   const payLoad = { userId: user._id };
   const token = generateToken(payLoad);

@@ -44,25 +44,27 @@
     - `POST /api/auth/login` for user login.
 24. Connected both routes to `src/Controllers/auth.controller.js` to handle request validation, user creation, login logic, and JWT generation.
 25. In the registration controller, the system checks whether the email already exists, creates a new user, generates a JWT token using the user ID as the payload, stores the token in a cookie, and returns the created user data plus the token.
-26. In the login controller, the app searches the user by email, retrieves the hashed password using `.select("+password")`, compares the entered password with `user.comparePassword(password)`, and returns a 401 response if the password is invalid.
+26. After successful registration, the controller also triggers a welcome email using the registered user’s email and name.
+27. In the login controller, the app searches the user by email, retrieves the hashed password using `.select("+password")`, compares the entered password with `user.comparePassword(password)`, and returns a 401 response if the password is invalid.
 
 ## 7. JWT Token Generation and Middleware
 
-27. Created `src/Config/jwt.js` to centralize JWT logic for the backend.
-28. Added a `generateToken(userData)` function that signs a new JWT using `jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "3d" })`.
-29. Added `jwtAuthMiddleware` to read the `Authorization` header, verify the token, attach the decoded payload to `req.user`, and reject unauthorized access with a 401 status when the token is missing or invalid.
-30. The JWT is generated and returned on both registration and login so the user can authenticate subsequent protected API requests.
+28. Created `src/Config/jwt.js` to centralize JWT logic for the backend.
+29. Added a `generateToken(userData)` function that signs a new JWT using `jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "3d" })`.
+30. Added `jwtAuthMiddleware` to read the `Authorization` header, verify the token, attach the decoded payload to `req.user`, and reject unauthorized access with a 401 status when the token is missing or invalid.
+31. The JWT is generated and returned on both registration and login so the user can authenticate subsequent protected API requests.
 
 ## 8. Google Mail / Email Setup
 
-31. Set up Google Cloud API services for email sending, then configured Gmail OAuth credentials for the backend application.
-32. Added the following environment variables in the `.env` file:
+32. Set up Google Cloud API services for email sending, then configured Gmail OAuth credentials for the backend application.
+33. Added the following environment variables in the `.env` file:
     - `CLIENT_ID`
     - `CLIENT_SECRET`
     - `REFRESH_TOKEN`
     - `EMAIL_USER`
-33. Created a dedicated `src/Services/email.js` file to manage third-party email sending logic using Nodemailer and Google OAuth.
-34. Added a reusable `sendEmail` function inside the email service to send messages with the configured Gmail OAuth2 transporter.
-35. The function accepts recipient, subject, and HTML/text content, then sends the email through the configured Google Mail account.
-36. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
-37. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
+34. Created a dedicated `src/Services/email.js` file to manage third-party email sending logic using Nodemailer and Google OAuth.
+35. Added a reusable `sendEmail` function inside the email service to send messages with the configured Gmail OAuth2 transporter.
+36. The function accepts recipient, subject, and HTML/text content, then sends the email through the configured Google Mail account.
+37. After new user registration, the backend calls the welcome email flow so the user receives a registration confirmation email automatically.
+38. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
+39. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
