@@ -12,52 +12,55 @@
 5. Created `server.js` in the project root to start the backend server and listen for incoming requests.
 6. Created the `src/Config` folder for application configuration files.
 7. Created `src/Config/db.js` to configure and establish the MongoDB database connection using Mongoose.
-8. Created `src/Models/user.model.js` to define the basic user schema for the banking system.
+8. Created the `src/Services` folder to hold third-party integrations and external service logic.
+9. Created `src/Services/email.js` for handling email sending through Google Mail / Nodemailer.
+10. Created `src/Models/user.model.js` to define the basic user schema for the banking system.
 
 ## 3. Installed Dependencies
 
-9. Installed `mongoose` to connect to and work with the MongoDB database.
-10. Installed `dotenv` to load environment variables from the `.env` file.
-11. Installed `bcryptjs` to securely hash and compare user passwords.
-12. Installed `jsonwebtoken` to create and verify access tokens for authenticated user requests.
-13. Installed `nodemailer` to send emails using Gmail/Google Mail SMTP.
+11. Installed `mongoose` to connect to and work with the MongoDB database.
+12. Installed `dotenv` to load environment variables from the `.env` file.
+13. Installed `bcryptjs` to securely hash and compare user passwords.
+14. Installed `jsonwebtoken` to create and verify access tokens for authenticated user requests.
+15. Installed `nodemailer` to send emails using Gmail/Google Mail SMTP.
 
 ## 4. User Model and Password Management
 
-13. Defined the `User` schema in `src/Models/user.model.js` with fields such as `email`, `name`, and `password`.
-14. Added validation rules for required values, email format, uniqueness, and minimum password length.
-15. Added a pre-save hook to hash the user's password with `bcryptjs` before saving to the database.
-16. Added a `comparePassword` method to compare a typed-in password with the hashed password during login.
-17. Set the `password` field to `select: false` by default so it does not return in normal queries, and explicitly select it during login for comparison.
+16. Defined the `User` schema in `src/Models/user.model.js` with fields such as `email`, `name`, and `password`.
+17. Added validation rules for required values, email format, uniqueness, and minimum password length.
+18. Added a pre-save hook to hash the user's password with `bcryptjs` before saving to the database.
+19. Added a `comparePassword` method to compare a typed-in password with the hashed password during login.
+20. Set the `password` field to `select: false` by default so it does not return in normal queries, and explicitly select it during login for comparison.
 
 ## 5. Database Configuration
 
-18. Set up the database connection in `src/Config/db.js` using Mongoose.
-19. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.
+21. Set up the database connection in `src/Config/db.js` using Mongoose.
+22. Used `dotenv` so the database connection string and other sensitive configuration values can be stored in environment variables instead of being hard-coded.
 
 ## 6. Authentication Routes and Controllers
 
-20. Created `src/Routes/auth.routes.js` with the user authentication endpoints:
+23. Created `src/Routes/auth.routes.js` with the user authentication endpoints:
     - `POST /api/auth/register` for new user signup.
     - `POST /api/auth/login` for user login.
-21. Connected both routes to `src/Controllers/auth.controller.js` to handle request validation, user creation, login logic, and JWT generation.
-22. In the registration controller, the system checks whether the email already exists, creates a new user, generates a JWT token using the user ID as the payload, stores the token in a cookie, and returns the created user data plus the token.
-23. In the login controller, the app searches the user by email, retrieves the hashed password using `.select("+password")`, compares the entered password with `user.comparePassword(password)`, and returns a 401 response if the password is invalid.
+24. Connected both routes to `src/Controllers/auth.controller.js` to handle request validation, user creation, login logic, and JWT generation.
+25. In the registration controller, the system checks whether the email already exists, creates a new user, generates a JWT token using the user ID as the payload, stores the token in a cookie, and returns the created user data plus the token.
+26. In the login controller, the app searches the user by email, retrieves the hashed password using `.select("+password")`, compares the entered password with `user.comparePassword(password)`, and returns a 401 response if the password is invalid.
 
 ## 7. JWT Token Generation and Middleware
 
-24. Created `src/Config/jwt.js` to centralize JWT logic for the backend.
-25. Added a `generateToken(userData)` function that signs a new JWT using `jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "3d" })`.
-26. Added `jwtAuthMiddleware` to read the `Authorization` header, verify the token, attach the decoded payload to `req.user`, and reject unauthorized access with a 401 status when the token is missing or invalid.
-27. The JWT is generated and returned on both registration and login so the user can authenticate subsequent protected API requests.
+27. Created `src/Config/jwt.js` to centralize JWT logic for the backend.
+28. Added a `generateToken(userData)` function that signs a new JWT using `jwt.sign(userData, process.env.JWT_SECRET_KEY, { expiresIn: "3d" })`.
+29. Added `jwtAuthMiddleware` to read the `Authorization` header, verify the token, attach the decoded payload to `req.user`, and reject unauthorized access with a 401 status when the token is missing or invalid.
+30. The JWT is generated and returned on both registration and login so the user can authenticate subsequent protected API requests.
 
 ## 8. Google Mail / Email Setup
 
-28. Set up Google Cloud API services for email sending, then configured Gmail OAuth credentials for the backend application.
-29. Added the following environment variables in the `.env` file:
+31. Set up Google Cloud API services for email sending, then configured Gmail OAuth credentials for the backend application.
+32. Added the following environment variables in the `.env` file:
     - `CLIENT_ID`
     - `CLIENT_SECRET`
     - `REFRESH_TOKEN`
     - `EMAIL_USER`
-30. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
-31. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
+33. Created a dedicated `src/Services/email.js` file to manage third-party email sending logic using Nodemailer and Google OAuth.
+34. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
+35. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
