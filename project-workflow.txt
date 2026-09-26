@@ -62,5 +62,7 @@
     - `REFRESH_TOKEN`
     - `EMAIL_USER`
 33. Created a dedicated `src/Services/email.js` file to manage third-party email sending logic using Nodemailer and Google OAuth.
-34. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
-35. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
+34. Added a reusable `sendEmail` function inside the email service to send messages with the configured Gmail OAuth2 transporter.
+35. The function accepts recipient, subject, and HTML/text content, then sends the email through the configured Google Mail account.
+36. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
+37. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
