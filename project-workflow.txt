@@ -68,3 +68,9 @@
 37. After new user registration, the backend calls the welcome email flow so the user receives a registration confirmation email automatically.
 38. These values are used to authenticate the Nodemailer transporter with Google Mail and send transactional emails such as verification, password reset, and account notifications.
 39. The backend will use a Gmail OAuth2-based transport so the app can send emails securely without exposing the actual password.
+
+## 9. Account Maintenance
+
+40. Created `src/Models/account.model.js` to maintain the account details linked to each user.
+41. The account model stores the user reference using an `ObjectId` that points to the related `user` record.
+42. This allows each user to be connected to their own bank account data, which can later be used for balance, transactions, and account operations.
