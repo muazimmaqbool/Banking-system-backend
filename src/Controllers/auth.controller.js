@@ -1,6 +1,6 @@
 const userModel = require("../Models/user.model");
 const { jwtAuthMiddleware, generateToken } = require("../middleware/jwt");
-const emailService=require("../services/email")
+const emailService = require("../services/email");
 
 //user register controller
 //will be used with this api: /api/auth/register inside app.routes.js file
@@ -49,7 +49,7 @@ async function userRegisterController(req, res) {
   });
 
   //sending email
-  await emailService.sendRegistrationEmail(user.name, user.email)
+  await emailService.sendRegistrationEmail(user.name, user.email);
 }
 
 //controller for login user:

@@ -1,5 +1,6 @@
 const express=require("express");
 const {jwtAuthMiddleware}=require("../middleware/jwt")
+const accountController=require("../Controllers/account.controller")
 
 const router=express.Router();
 
@@ -8,6 +9,6 @@ const router=express.Router();
  * - Create a new account
  * - Protected Route
  */
-router.post("/",jwtAuthMiddleware,)
+router.post("/",jwtAuthMiddleware,accountController.createAccountController)
 
 module.exports=router
