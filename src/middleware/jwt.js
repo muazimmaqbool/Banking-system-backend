@@ -1,4 +1,5 @@
 const jwt =require('jsonwebtoken')
+const userModel=require("../Models/user.model")
 
 //creating middleware 
 //this middleware is used to check whether the user is loggedin or not 

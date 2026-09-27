@@ -1,7 +1,7 @@
 const mongoose=require("mongoose");
 
 const accountSchema=new mongoose.Schema({
-    usewr:{
+    user:{
         type: mongoose.Schema.Types.ObjectId, // Stores the MongoDB _id of the related user
         ref:"user", // Tells Mongoose this ObjectId refers to the "user" collection (i.e in user.model.js)
         required:[true,"Account must be asscoiated with a user"],
