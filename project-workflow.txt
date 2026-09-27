@@ -1,5 +1,11 @@
 # Banking System Backend - Project Workflow
 
+## 0. What is banking ledger system:
+
+A banking ledger system is a backend application that tracks users, accounts, and financial records in a secure and structured way. It stores each user’s identity, authentication data, and bank account information, while also keeping a reliable record of financial activity.
+
+It works by allowing users to register and log in, creating protected account records tied to their profile, and using APIs to manage operations like creating accounts and processing money-related actions. The system uses a database to persist this information, JWT authentication to protect routes, and email services for notifications and user communication.
+
 ## 1. Project Initialization
 0. Installed `express` to build the backend web server and API routes.
 1. Initialized the Node.js project with `npm init -y`, which created the project configuration in `package.json`.
@@ -74,3 +80,5 @@
 40. Created `src/Models/account.model.js` to maintain the account details linked to each user.
 41. The account model stores the user reference using an `ObjectId` that points to the related `user` record.
 42. This allows each user to be connected to their own bank account data, which can later be used for balance, transactions, and account operations.
+43. Added a protected route at `POST /api/accounts/` for creating a new account for the authenticated user.
+44. This route uses JWT authentication so only logged-in users can create their own account records.
