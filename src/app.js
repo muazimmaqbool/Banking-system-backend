@@ -20,9 +20,11 @@ app.use(cookieParser())
 /** Importing Routes */
 const authRouter=require("./Routes/auth.routes")
 const accountRouter=require("./Routes/account.routes")
+const transactionRouter=require("./Routes/transaction.routes")
 
 //Using Routes
 app.use("/api/auth",authRouter)
 app.use("/api/accounts",accountRouter)
+app.use("/api/transactions",transactionRouter)
 
 module.exports=app
