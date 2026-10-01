@@ -14,5 +14,12 @@
      * 10. Send email notification
  */
 async function createTransaction(req,res){
-    
+    const {fromAccount,toAccount,amount,idempotencyKey}=req.body; 
+
+    if(!fromAccount || !toAccount || !amount || !idempotencyKey){
+        res.status(400).json({
+            message:"fromAccount, toAccount, amount and idempotencyKey are required"
+        })
+    }
+
 }
