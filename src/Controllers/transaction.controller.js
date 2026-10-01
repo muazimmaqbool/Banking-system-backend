@@ -19,6 +19,7 @@ const emailService=require("../services/email")
 async function createTransaction(req,res){
     const {fromAccount,toAccount,amount,idempotencyKey}=req.body; 
 
+    // 1-> validation user accounts (user request):
     if(!fromAccount || !toAccount || !amount || !idempotencyKey){
         return res.status(400).json({
             message:"fromAccount, toAccount, amount and idempotencyKey are required"
@@ -41,8 +42,21 @@ async function createTransaction(req,res){
         })
     }
 
-
-
+    //2-> validation idempotency key:
+    //checking is their any other transaction linked/exist with this idempotency key (that user provided with in request)
+    //this is to make sure amount don't get deduct/debitted or credited twice
+    const isTransactionAlreadyExists=await transactionModel.findOne({
+        idempotencyKey:idempotencyKey
+    })
+    if(isTransactionAlreadyExists){
+        //Checking if already existed transaction succeeded i.e gets completed
+        if(isTransactionAlreadyExists.status==="COMPLETED"){
+            res.status(200).json({
+                message:"Transaction already processed and is completed",
+                transaction:isTransactionAlreadyExists
+            })
+        }
+    }
 }
 
 module.exports={createTransaction}
