@@ -55,6 +55,20 @@ async function createTransaction(req,res){
                 message:"Transaction already processed and is completed",
                 transaction:isTransactionAlreadyExists
             })
+        } 
+
+        //if transaction status is pending
+        if(isTransactionAlreadyExists.status==="PENDING"){
+             res.status(200).json({
+                message:"Transaction is stil processing"
+            })
+        }
+
+        //if transaction status is pending
+        if(isTransactionAlreadyExists.status==="FAILED"){
+             res.status(500).json({
+                message:"Transaction processing failed, please retry"
+            })
         }
     }
 }
