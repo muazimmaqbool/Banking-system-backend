@@ -49,6 +49,7 @@ async function createTransaction(req,res){
         idempotencyKey:idempotencyKey
     })
     if(isTransactionAlreadyExists){
+        
         //Checking if already existed transaction succeeded i.e gets completed
         if(isTransactionAlreadyExists.status==="COMPLETED"){
             res.status(200).json({
@@ -64,12 +65,20 @@ async function createTransaction(req,res){
             })
         }
 
-        //if transaction status is pending
+        //if transaction status is failed
         if(isTransactionAlreadyExists.status==="FAILED"){
              res.status(500).json({
                 message:"Transaction processing failed, please retry"
             })
         }
+
+        //if transaction status is reserved
+        if(isTransactionAlreadyExists.status==="RESERVED"){
+             res.status(500).json({
+                message:"Transaction was reversed, please retry"
+            })
+        }
+
     }
 }
 
