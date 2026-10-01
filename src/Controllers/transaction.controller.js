@@ -49,10 +49,10 @@ async function createTransaction(req,res){
         idempotencyKey:idempotencyKey
     })
     if(isTransactionAlreadyExists){
-        
+
         //Checking if already existed transaction succeeded i.e gets completed
         if(isTransactionAlreadyExists.status==="COMPLETED"){
-            res.status(200).json({
+           return res.status(200).json({
                 message:"Transaction already processed and is completed",
                 transaction:isTransactionAlreadyExists
             })
@@ -60,25 +60,33 @@ async function createTransaction(req,res){
 
         //if transaction status is pending
         if(isTransactionAlreadyExists.status==="PENDING"){
-             res.status(200).json({
+            return res.status(200).json({
                 message:"Transaction is stil processing"
             })
         }
 
         //if transaction status is failed
         if(isTransactionAlreadyExists.status==="FAILED"){
-             res.status(500).json({
+            return res.status(500).json({
                 message:"Transaction processing failed, please retry"
             })
         }
 
         //if transaction status is reserved
         if(isTransactionAlreadyExists.status==="RESERVED"){
-             res.status(500).json({
+            return res.status(500).json({
                 message:"Transaction was reversed, please retry"
             })
         }
 
+    }
+
+    //3-> Checking account status
+    //making sure both from and to account are Active and are not frozen or closed
+    if(fromUserAccount.status!=="ACTIVE" || toUserAccount.status!=="ACTIVE"){
+       return res.status(500).json({
+            message:"Both fromAccount and toAccount must be ACTIVE to process transaction"
+        })
     }
 }
 
