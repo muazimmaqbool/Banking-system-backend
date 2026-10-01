@@ -1,4 +1,7 @@
-
+const transactionModel=require("../Models/transaction.model")
+const ledgerModel=require("../Models/ledger.model");
+const accountModel=require("../Models/account.model")
+const emailService=require("../services/email")
 /**
  * - Create a new transaction
  * THE 10-STEP TRANSFER FLOW:
@@ -17,9 +20,19 @@ async function createTransaction(req,res){
     const {fromAccount,toAccount,amount,idempotencyKey}=req.body; 
 
     if(!fromAccount || !toAccount || !amount || !idempotencyKey){
-        res.status(400).json({
+        return res.status(400).json({
             message:"fromAccount, toAccount, amount and idempotencyKey are required"
         })
     }
+
+    //checking whether the formAccount and toAccount exists or not
+    //we will check them by id (i.e account id) as fromAccount and toAccount will contain account id's
+    const fromUserAccount=await accountModel.findOne({
+        _id:fromAccount
+    })
+    const toUserAccount=await accountModel.findOne({
+        _id:toAccount
+    })
+
 
 }
