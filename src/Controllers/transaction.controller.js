@@ -34,5 +34,11 @@ async function createTransaction(req,res){
         _id:toAccount
     })
 
+    //if the accounts are not found
+    if(!fromUserAccount || !toUserAccount){
+        return res.status(400).json({
+            message:"Invalid from Account or to Account"
+        })
+    }
 
 }
