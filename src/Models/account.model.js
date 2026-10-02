@@ -40,7 +40,36 @@ accountSchema.methods.getBalance = async function(){
  // ledger entries with type "DEBIT" we will add them and subtract with sum ledgers of type "CREDIT" this will give us final balance
 
  const balanceData=await ledgerModel.aggregate([
-    {$match:{account:this._id}}
+    {$match:{account:this._id}},
+    {
+        $group:{
+            _id:null,
+            totalDebit:{
+                $sum:{
+                    $cond:[
+                        {$eq:["$type","DEBIT"]},
+                        "$amount",
+                        0
+                    ]
+                }
+            },
+            totalCredit:{
+                $sum:{
+                    $cond:[
+                        {$eq:["$type","CREDIT"]},
+                        "$amount",
+                        0
+                    ]
+                }
+            }
+        }
+    },
+    {
+        $project:{
+            _id:0,
+            balance:{$subtract:["$totalCredit","$totalDebit"]}
+        }
+    }
  ])
 }
 
