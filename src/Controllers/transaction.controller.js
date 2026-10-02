@@ -92,7 +92,11 @@ async function createTransaction(req, res) {
     });
   }
 
-  //4->Derive sender balance from ledger:
+  //4-> Derive sender balance from ledger:
+  //Checking whether sender account as sufficient available balance for transaction or not
+  //after checking it only then we can transfer money from sender to receiver's account
+  const balancea=await fromUserAccount.getBalance(); //getBalance method is of account model
+
 }
 
 module.exports = { createTransaction };

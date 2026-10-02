@@ -1,4 +1,5 @@
 const mongoose=require("mongoose");
+const ledgerModel=require("./ledger.model")
 
 const accountSchema=new mongoose.Schema({
     user:{
@@ -31,6 +32,17 @@ const accountSchema=new mongoose.Schema({
 // Creating a compound index on user + status to make queries like
 // "find accounts for this user and status" faster and more efficient.
 accountSchema.index({ user: 1, status: 1 });
+
+//method which will get balance of this account
+accountSchema.methods.getBalance = async function(){
+ // the balance we will calculate is from ledgers 
+ // balance will be calculated based on ledger type i.e:
+ // ledger entries with type "DEBIT" we will add them and subtract with sum ledgers of type "CREDIT" this will give us final balance
+
+ const balanceData=await ledgerModel.aggregate([
+    {$match:{account:this._id}}
+ ])
+}
 
 
 const accountModel = mongoose.model("account", accountSchema);
