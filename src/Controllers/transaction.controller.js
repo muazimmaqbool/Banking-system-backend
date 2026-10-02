@@ -93,10 +93,18 @@ async function createTransaction(req, res) {
   }
 
   //4-> Derive sender balance from ledger:
+
+  //getting available balance of senders account
+  const balance = await fromUserAccount.getBalance(); //getBalance method is of account model
+
   //Checking whether sender account as sufficient available balance for transaction or not
   //after checking it only then we can transfer money from sender to receiver's account
-  const balance=await fromUserAccount.getBalance(); //getBalance method is of account model
-
+  if (balance < amount) {
+    return res.status(400).json({
+      message: `Insufficient balance. Current balance is ${balance}. Requested amount is ${amount}`,
+    });
+  }
+  
 }
 
 module.exports = { createTransaction };
