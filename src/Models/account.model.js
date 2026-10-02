@@ -71,6 +71,14 @@ accountSchema.methods.getBalance = async function(){
         }
     }
  ])
+
+ //when account is new i.e no ledger entry then balanceData will be an empty array [] the we return balance as 0
+ if(balanceData.length===0){
+    return 0
+ }
+
+ //when balance is available then returning balance
+ return balanceData[0].balance
 }
 
 
