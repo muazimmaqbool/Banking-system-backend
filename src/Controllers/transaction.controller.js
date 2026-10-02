@@ -2,6 +2,7 @@ const transactionModel = require("../Models/transaction.model");
 const ledgerModel = require("../Models/ledger.model");
 const accountModel = require("../Models/account.model");
 const emailService = require("../services/email");
+const mongoose=require("mongoose")
 /**
  * - Create a new transaction
  * THE 10-STEP TRANSFER FLOW:
@@ -104,7 +105,19 @@ async function createTransaction(req, res) {
       message: `Insufficient balance. Current balance is ${balance}. Requested amount is ${amount}`,
     });
   }
-  
+
+  //5-> Create transaction (PENDING):
+  let transaction;
+  try{
+    const session=await mongoose.startSession();
+    session.startTransaction()
+  }catch (error) {
+
+        return res.status(400).json({
+            message: "Transaction is Pending due to some issue, please retry after sometime",
+        })
+
+    }
 }
 
 module.exports = { createTransaction };
