@@ -125,27 +125,33 @@ async function createTransaction(req, res) {
         idempotencyKey,
         status: "PENDING",
       },
-      { session });
+      { session },
+    );
 
     //creating debit ledger entry
-    const debitLedgerEntry=await ledgerModel.create({
-        account:fromAccount,
-        amount:amount,
-        transaction:transaction?._id,
-        type:"DEBIT"
-    },{session})
+    const debitLedgerEntry = await ledgerModel.create(
+      {
+        account: fromAccount,
+        amount: amount,
+        transaction: transaction?._id,
+        type: "DEBIT",
+      },
+      { session },
+    );
 
-     //creating credit ledger entry
-    const creditLedgerEntry=await ledgerModel.create({
-        account:toAccount,
-        amount:amount,
-        transaction:transaction?._id,
-        type:"CREDIT"
-    },{session})
+    //creating credit ledger entry
+    const creditLedgerEntry = await ledgerModel.create(
+      {
+        account: toAccount,
+        amount: amount,
+        transaction: transaction?._id,
+        type: "CREDIT",
+      },
+      { session },
+    );
 
     //marking transaction as completed
-    transaction.status="COMPLETED",
-    await transaction.save({session})
+    ((transaction.status = "COMPLETED"), await transaction.save({ session }));
     // await transactionModel.findOneAndUpdate(
     //         { _id: transaction._id },
     //         { status: "COMPLETED" },
@@ -153,8 +159,20 @@ async function createTransaction(req, res) {
     //     )
 
     await session.commitTransaction();
-    session.endSession()
+    session.endSession();
 
+    //sending email
+    await emailService.sendTransactionEmail(
+      req.user.email,
+      req.user.name,
+      amount,
+      toAccount,
+    );
+
+    return res.status(201).json({
+      message: "Transaction completed successfully",
+      transaction: transaction,
+    });
   } catch (error) {
     return res.status(400).json({
       message:
