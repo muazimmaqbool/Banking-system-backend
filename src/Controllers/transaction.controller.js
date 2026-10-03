@@ -2,7 +2,7 @@ const transactionModel = require("../Models/transaction.model");
 const ledgerModel = require("../Models/ledger.model");
 const accountModel = require("../Models/account.model");
 const emailService = require("../services/email");
-const mongoose=require("mongoose")
+const mongoose = require("mongoose");
 /**
  * - Create a new transaction
  * THE 10-STEP TRANSFER FLOW:
@@ -107,17 +107,32 @@ async function createTransaction(req, res) {
   }
 
   //5-> Create transaction (PENDING):
+  //with the step 5 we will also do step 6,7 and 8
+  //i.e Create DEBIT ledger entry, Create CREDIT ledger entry and Mark transaction COMPLETED
+  //Note these 4 steps from 5 to 8 should be done at exactly at once and all should be done, if anyone among them fails
+  //then start again (revert back) i.e these all should be done a
   let transaction;
-  try{
-    const session=await mongoose.startSession();
-    session.startTransaction()
-  }catch (error) {
+  try {
+    const session = await mongoose.startSession();
+    session.startTransaction(); //means after that whatever you do either entire thing gets completed or nothing
 
-        return res.status(400).json({
-            message: "Transaction is Pending due to some issue, please retry after sometime",
-        })
-
-    }
+    //creating transaction
+    transaction = await transactionModel.create(
+        {
+            fromAccount,
+            toAccount,
+            amount,
+            idempotencyKey,
+            status: "PENDING",
+          },
+        { session },
+      )
+  } catch (error) {
+    return res.status(400).json({
+      message:
+        "Transaction is Pending due to some issue, please retry after sometime",
+    });
+  }
 }
 
 module.exports = { createTransaction };
