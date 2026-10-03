@@ -25,10 +25,13 @@ const userSchema = new mongoose.Schema(
       minlength: [6, "Password should contain more than 6 characters"],
       select: false, //with select=false, whenever we fetch user data by any user query the password will not be returned by default
     },
+    //systemUser is used to determine whether this account/user is owned by bank
+    //if systemUser is true then it's banks own account which can be used to transfer any amount of money
+    //as banks have the money in form of cash
     systemUser:{
       type:Boolean,
-      default:true,
-      immutable:false,
+      default:false,
+      immutable:true,
       select:false
     }
   },
