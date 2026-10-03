@@ -17,6 +17,8 @@ const mongoose = require("mongoose");
  * 9. Commit MongoDB session
  * 10. Send email notification
  */
+
+//used inside transaction.routes.js
 async function createTransaction(req, res) {
   const { fromAccount, toAccount, amount, idempotencyKey } = req.body;
 
@@ -35,7 +37,7 @@ async function createTransaction(req, res) {
   const toUserAccount = await accountModel.findOne({
     _id: toAccount,
   });
-
+  
   //if the accounts are not found
   if (!fromUserAccount || !toUserAccount) {
     return res.status(400).json({

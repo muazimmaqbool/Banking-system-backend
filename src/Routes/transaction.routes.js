@@ -1,6 +1,6 @@
 const {Router}=require("express");
 const {jwtAuthMiddleware}=require("../middleware/jwt")
-const {createTransaction} =require("../Controllers/transaction.controller")
+const transactionController =require("../Controllers/transaction.controller")
 
 const transactionRoutes=Router()
 
@@ -8,6 +8,6 @@ const transactionRoutes=Router()
  * - POST /api/transactions/
  * - Create a new transaction
  */
-transactionRoutes.post("/",jwtAuthMiddleware,createTransaction);
+transactionRoutes.post("/",jwtAuthMiddleware,transactionController.createTransaction);
 
 module.exports=transactionRoutes;
