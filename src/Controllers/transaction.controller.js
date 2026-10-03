@@ -118,15 +118,31 @@ async function createTransaction(req, res) {
 
     //creating transaction
     transaction = await transactionModel.create(
-        {
-            fromAccount,
-            toAccount,
-            amount,
-            idempotencyKey,
-            status: "PENDING",
-          },
-        { session },
-      )
+      {
+        fromAccount,
+        toAccount,
+        amount,
+        idempotencyKey,
+        status: "PENDING",
+      },
+      { session });
+
+    //creating debit ledger entry
+    const debitLedgerEntry=await ledgerModel.create({
+        account:fromAccount,
+        amount:amount,
+        transaction:transaction?._id,
+        type:"DEBIT"
+    },{session})
+
+     //creating credit ledger entry
+    const creditLedgerEntry=await ledgerModel.create({
+        account:toAccount,
+        amount:amount,
+        transaction:transaction?._id,
+        type:"CREDIT"
+    },{session})
+
   } catch (error) {
     return res.status(400).json({
       message:
