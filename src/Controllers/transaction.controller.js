@@ -206,9 +206,9 @@ async function createInitialFundsTransaction(req, res) {
 
   //from account will of system account (i.e banks personal account that will initial first funds)
   const fromUserAccount = await accountModel.findOne({
-    systemUser: true,
-    user: req.user._id,
+    user: req.user._id
   });
+
 
   if (!fromUserAccount) {
     return res.status(400).json({
