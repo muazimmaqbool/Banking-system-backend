@@ -4,6 +4,8 @@ const transactionController =require("../Controllers/transaction.controller")
 
 const transactionRoutes=Router()
 
+//Note goto this website for generation idempotencyKey: https://www.uuidgenerator.net/version7
+
 /**
  * - POST /api/transactions/
  * - Create a new transaction
