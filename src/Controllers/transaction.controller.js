@@ -118,6 +118,8 @@ async function createTransaction(req, res) {
     const session = await mongoose.startSession();
     session.startTransaction(); //means after that whatever you do either entire thing gets completed or nothing
 
+    //Note: pass data in array when session is used
+
     //creating transaction
     transaction = await transactionModel.create(
       {
@@ -219,6 +221,7 @@ async function createInitialFundsTransaction(req, res) {
   const session = await mongoose.startSession();
   session.startTransaction();
 
+  //not saving transaction is database yet, only saved on server
   const transaction = new transactionModel({
     fromAccount: fromUserAccount._id,
     toAccount,
