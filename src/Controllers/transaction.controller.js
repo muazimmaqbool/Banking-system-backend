@@ -202,7 +202,9 @@ async function createInitialFundsTransaction(req, res) {
     });
   }
 
+  //from account will of system account (i.e banks personal account that will initial first funds)
   const fromUserAccount = await accountModel.findOne({
+    systemUser:true,
     user: req.user._id,
   });
 
@@ -211,6 +213,18 @@ async function createInitialFundsTransaction(req, res) {
       message: "System user account not found",
     });
   }
+
+  const session = await mongoose.startSession()
+    session.startTransaction()
+
+    const transaction = new transactionModel({
+        fromAccount: fromUserAccount._id,
+        toAccount,
+        amount,
+        idempotencyKey,
+        status: "PENDING"
+    })
+
 }
 
 module.exports = { createTransaction, createInitialFundsTransaction };
