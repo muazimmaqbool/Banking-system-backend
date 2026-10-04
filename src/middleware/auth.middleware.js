@@ -44,4 +44,8 @@ const generateToken=(userData)=>{
     //return jwt.sign({userData},process.env.JWT_SECRET_KEY,{expiresIn:30000})
 
 }
-module.exports={jwtAuthMiddleware,generateToken}
+
+const authSystemUserMiddleware=()=>{
+
+}
+module.exports={jwtAuthMiddleware,generateToken,authSystemUserMiddleware}

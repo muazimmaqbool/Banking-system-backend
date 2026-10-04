@@ -1,5 +1,5 @@
 const userModel = require("../Models/user.model");
-const { jwtAuthMiddleware, generateToken } = require("../middleware/jwt");
+const { jwtAuthMiddleware, generateToken } = require("../middleware/auth.middleware");
 const emailService = require("../services/email");
 
 //user register controller

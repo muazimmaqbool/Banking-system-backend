@@ -37,7 +37,7 @@ async function createTransaction(req, res) {
   const toUserAccount = await accountModel.findOne({
     _id: toAccount,
   });
-  
+
   //if the accounts are not found
   if (!fromUserAccount || !toUserAccount) {
     return res.status(400).json({
@@ -183,4 +183,8 @@ async function createTransaction(req, res) {
   }
 }
 
-module.exports = { createTransaction };
+async function createInitialFundsTransaction(req,res){
+
+}
+
+module.exports = { createTransaction,createInitialFundsTransaction };

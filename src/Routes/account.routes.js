@@ -1,5 +1,5 @@
 const express=require("express");
-const {jwtAuthMiddleware}=require("../middleware/jwt")
+const {jwtAuthMiddleware}=require("../middleware/auth.middleware")
 const accountController=require("../Controllers/account.controller")
 
 const router=express.Router();
