@@ -153,12 +153,14 @@ async function createTransaction(req, res) {
     );
 
     //marking transaction as completed
-    ((transaction.status = "COMPLETED"), await transaction.save({ session }));
-    // await transactionModel.findOneAndUpdate(
-    //         { _id: transaction._id },
-    //         { status: "COMPLETED" },
-    //         { session }
-    //     )
+    await transactionModel.findOneAndUpdate(
+            { _id: transaction._id },
+            { status: "COMPLETED" },
+            { session }
+        )
+    //or
+    // transaction.status = "COMPLETED";
+    // await transaction.save({ session });
 
     await session.commitTransaction();
     session.endSession();
@@ -204,7 +206,7 @@ async function createInitialFundsTransaction(req, res) {
 
   //from account will of system account (i.e banks personal account that will initial first funds)
   const fromUserAccount = await accountModel.findOne({
-    systemUser:true,
+    systemUser: true,
     user: req.user._id,
   });
 
@@ -214,17 +216,51 @@ async function createInitialFundsTransaction(req, res) {
     });
   }
 
-  const session = await mongoose.startSession()
-    session.startTransaction()
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-    const transaction = new transactionModel({
-        fromAccount: fromUserAccount._id,
-        toAccount,
-        amount,
-        idempotencyKey,
-        status: "PENDING"
-    })
+  const transaction = new transactionModel({
+    fromAccount: fromUserAccount._id,
+    toAccount,
+    amount,
+    idempotencyKey,
+    status: "PENDING",
+  });
 
+  const debitLedgerEntry = await ledgerModel.create(
+    [
+      {
+        account: fromUserAccount._id,
+        amount: amount,
+        transaction: transaction._id,
+        type: "DEBIT",
+      },
+    ],
+    { session },
+  );
+
+  const creditLedgerEntry = await ledgerModel.create(
+    [
+      {
+        account: toAccount,
+        amount: amount,
+        transaction: transaction._id,
+        type: "CREDIT",
+      },
+    ],
+    { session },
+  );
+
+  transaction.status = "COMPLETED";
+  await transaction.save({ session });
+
+  await session.commitTransaction();
+  session.endSession();
+
+  return res.status(201).json({
+    message: "Initial funds transaction completed successfully",
+    transaction: transaction,
+  });
 }
 
 module.exports = { createTransaction, createInitialFundsTransaction };
