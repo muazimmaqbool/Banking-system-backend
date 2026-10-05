@@ -36,4 +36,29 @@ async function getUserAccountsController(req,res){
     })
 }
 
-module.exports = { createAccountController,getUserAccountsController };
+//getting account balance of the account
+async function getAccountBalanceController(req,res){
+  const {accountId}=req.params;
+
+  //checking the account whose balance user wants to check is this account belongs to the user who is checking/logged in
+  const account=await accountModel.findOne({
+    _id:accountId,
+    user:req.user._id
+  })
+
+  //account not found
+  if(!account){
+    res.status(400).json({
+      message:"Account not found!"
+    })
+  }
+
+  const balance=await account.getBalance()
+
+  res.status(200).json({
+    accountId:accountId,
+    balance:balance
+  })
+}
+
+module.exports = { createAccountController,getUserAccountsController,getAccountBalanceController };
