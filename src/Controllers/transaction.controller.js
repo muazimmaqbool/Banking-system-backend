@@ -121,48 +121,47 @@ async function createTransaction(req, res) {
     //Note: pass data in array when session is used
 
     //creating transaction
-    transaction = await transactionModel.create(
-      {
-        fromAccount,
-        toAccount,
-        amount,
-        idempotencyKey,
-        status: "PENDING",
-      },
-      { session },
-    );
+    transaction = new transactionModel({
+      fromAccount,
+      toAccount,
+      amount,
+      idempotencyKey,
+      status: "PENDING",
+    });
 
     //creating debit ledger entry
     const debitLedgerEntry = await ledgerModel.create(
-      {
-        account: fromAccount,
-        amount: amount,
-        transaction: transaction?._id,
-        type: "DEBIT",
-      },
+      [
+        {
+          account: fromAccount,
+          amount: amount,
+          transaction: transaction?._id,
+          type: "DEBIT",
+        },
+      ],
       { session },
     );
 
     //creating credit ledger entry
     const creditLedgerEntry = await ledgerModel.create(
-      {
+      [{
         account: toAccount,
         amount: amount,
         transaction: transaction?._id,
         type: "CREDIT",
-      },
+      }],
       { session },
     );
 
     //marking transaction as completed
-    await transactionModel.findOneAndUpdate(
-            { _id: transaction._id },
-            { status: "COMPLETED" },
-            { session }
-        )
+    // await transactionModel.findOneAndUpdate(
+    //   { _id: transaction._id },
+    //   { status: "COMPLETED" },
+    //   { session },
+    // );
     //or
-    // transaction.status = "COMPLETED";
-    // await transaction.save({ session });
+    transaction.status = "COMPLETED";
+    await transaction.save({ session });
 
     await session.commitTransaction();
     session.endSession();
@@ -208,9 +207,8 @@ async function createInitialFundsTransaction(req, res) {
 
   //from account will of system account (i.e banks personal account that will initial first funds)
   const fromUserAccount = await accountModel.findOne({
-    user: req.user._id
+    user: req.user._id,
   });
-
 
   if (!fromUserAccount) {
     return res.status(400).json({
