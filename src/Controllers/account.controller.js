@@ -26,4 +26,14 @@ async function createAccountController(req, res) {
 */
 }
 
-module.exports = { createAccountController };
+
+//getting all accounts which are linked with the currently logged in user:
+async function getUserAccountsController(req,res){
+  //req.user._id is through jwtauthmiddleware
+  const accounts=await accountModel.find({user:req.user._id})
+  res.status(200).json({
+        accounts
+    })
+}
+
+module.exports = { createAccountController,getUserAccountsController };

@@ -11,4 +11,15 @@ const router=express.Router();
  */
 router.post("/",jwtAuthMiddleware,accountController.createAccountController)
 
+/**
+ * - GET /api/accounts/
+ * - Get all accounts of the logged-in user
+ * - Protected Route
+ */
+router.get("/",jwtAuthMiddleware,accountController.getUserAccountsController)
+
+/**
+ * - GET /api/accounts/balance/:accountId
+ */
+router.get("/balance/:accountId",jwtAuthMiddleware,accountController)
 module.exports=router
