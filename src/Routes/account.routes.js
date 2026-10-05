@@ -21,5 +21,5 @@ router.get("/",jwtAuthMiddleware,accountController.getUserAccountsController)
 /**
  * - GET /api/accounts/balance/:accountId
  */
-router.get("/balance/:accountId",jwtAuthMiddleware,accountController)
+// router.get("/balance/:accountId",jwtAuthMiddleware,accountController)
 module.exports=router
