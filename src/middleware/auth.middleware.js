@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../Models/user.model");
+const tokenBlackListModel = require("../Models/blackList.model");
 
 //creating middleware
 //this middleware is used to check whether the user is loggedin or not
@@ -14,6 +15,17 @@ const jwtAuthMiddleware = async (req, res, next) => {
   //if token is not passed:
   if (!token) {
     res.status(401).json({ error: "Unauthorized access, token is missing" });
+  }
+
+  //checking is the provided token blacklisted because if the token is blacklisted then it's not valid
+  //as token gets blacklisted when user logs out
+  const isBlackListed = await tokenBlackListModel.findOne({
+    token: token,
+  });
+  if (isBlacklisted) {
+    return res.status(401).json({
+      message: "Unauthorized access, token is invalid",
+    });
   }
 
   //when token is present:
