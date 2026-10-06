@@ -1,6 +1,7 @@
 const userModel = require("../Models/user.model");
 const { jwtAuthMiddleware, generateToken } = require("../middleware/auth.middleware");
 const emailService = require("../services/email");
+const tokenBlackListModel=require("../Models/blackList.model")
 
 //user register controller
 //will be used with this api: /api/auth/register inside app.routes.js file
@@ -103,7 +104,23 @@ async function userLoginController(req, res) {
   */
 
 async function userLogoutController(req,res){
+  const token=req.cookies.token || req.headers.authorization?.split(" ")[1]
 
+  if(!token){
+    return res.status(200).json({
+      message:"User log out successfully"
+    })
+  }
+
+  await tokenBlackListModel.create({
+    token:token
+  });
+
+  res.clearCookie("token");
+
+  res.status(200).json({
+        message: "User logged out successfully"
+    })
 }
 
 module.exports = { userRegisterController, userLoginController,userLogoutController };
