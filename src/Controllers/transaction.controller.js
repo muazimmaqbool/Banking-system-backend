@@ -150,10 +150,10 @@ async function createTransaction(req, res) {
       { session },
     );
 
-    //after debit the credit process will be done after
-    // await (() => {
-    //   return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
-    // })();
+    //after debit the credit process will be done after (currently after 10 seconds)
+    await (() => {
+      return new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+    })();
 
     //creating credit ledger entry
     const creditLedgerEntry = await ledgerModel.create(
@@ -169,14 +169,12 @@ async function createTransaction(req, res) {
     );
 
     //marking transaction as completed
-    // await transactionModel.findOneAndUpdate(
-    //   { _id: transaction._id },
-    //   { status: "COMPLETED" },
-    //   { session },
-    // );
-    //or
-    transaction.status = "COMPLETED";
-    await transaction.save({ session });
+    await transactionModel.findOneAndUpdate(
+      { _id: transaction._id },
+      { status: "COMPLETED" },
+      { session },
+    );
+
 
     await session.commitTransaction();
     session.endSession();
