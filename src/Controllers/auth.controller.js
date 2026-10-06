@@ -111,6 +111,12 @@ async function userLogoutController(req,res){
       message:"User log out successfully"
     })
   }
+  //or
+  //   if(!token){
+  //   return res.status(400).json({
+  //     message:"Token is missing"
+  //   })
+  // }
 
   await tokenBlackListModel.create({
     token:token
