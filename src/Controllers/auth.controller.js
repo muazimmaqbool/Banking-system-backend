@@ -96,4 +96,14 @@ async function userLoginController(req, res) {
   });
 }
 
-module.exports = { userRegisterController, userLoginController };
+//controller for logout
+/**
+ * - User Logout Controller
+ * - POST /api/auth/logout
+  */
+
+async function userLogoutController(req,res){
+
+}
+
+module.exports = { userRegisterController, userLoginController,userLogoutController };
