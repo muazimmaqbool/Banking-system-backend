@@ -121,13 +121,21 @@ async function createTransaction(req, res) {
     //Note: pass data in array when session is used
 
     //creating transaction
-    transaction = new transactionModel({
-      fromAccount,
-      toAccount,
-      amount,
-      idempotencyKey,
-      status: "PENDING",
-    });
+    transaction = (
+      await transactionModel.create(
+        [
+          {
+            fromAccount,
+            toAccount,
+            amount,
+            idempotencyKey,
+            status: "PENDING",
+          },
+        ],
+        { session },
+      )
+    )[0];
+    //[0] means transaction will be at number 0
 
     //creating debit ledger entry
     const debitLedgerEntry = await ledgerModel.create(
@@ -143,18 +151,20 @@ async function createTransaction(req, res) {
     );
 
     //after debit the credit process will be done after
-     await (() => {
-            return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
-        })()
+    // await (() => {
+    //   return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
+    // })();
 
     //creating credit ledger entry
     const creditLedgerEntry = await ledgerModel.create(
-      [{
-        account: toAccount,
-        amount: amount,
-        transaction: transaction?._id,
-        type: "CREDIT",
-      }],
+      [
+        {
+          account: toAccount,
+          amount: amount,
+          transaction: transaction?._id,
+          type: "CREDIT",
+        },
+      ],
       { session },
     );
 
