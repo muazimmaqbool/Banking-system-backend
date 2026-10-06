@@ -142,6 +142,11 @@ async function createTransaction(req, res) {
       { session },
     );
 
+    //after debit the credit process will be done after
+     await (() => {
+            return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
+        })()
+
     //creating credit ledger entry
     const creditLedgerEntry = await ledgerModel.create(
       [{
