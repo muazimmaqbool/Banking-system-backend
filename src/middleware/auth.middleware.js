@@ -22,7 +22,7 @@ const jwtAuthMiddleware = async (req, res, next) => {
   const isBlackListed = await tokenBlackListModel.findOne({
     token: token,
   });
-  if (isBlacklisted) {
+  if (isBlackListed) {
     return res.status(401).json({
       message: "Unauthorized access, token is invalid",
     });
@@ -63,6 +63,17 @@ const authSystemUserMiddleware = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       message: "Unauthorized access, token is missing",
+    });
+  }
+
+    //checking is the provided token blacklisted because if the token is blacklisted then it's not valid
+  //as token gets blacklisted when user logs out
+  const isBlackListed = await tokenBlackListModel.findOne({
+    token: token,
+  });
+  if (isBlackListed) {
+    return res.status(401).json({
+      message: "Unauthorized access, token is invalid",
     });
   }
 
