@@ -104,6 +104,7 @@ module.exports = accountModel;
 //Extra:
 /*
 Setting index:true in Mongoose (MongoDB) makes queries faster by creating a built-in lookup table for that specific field. 
-Instead of searching through every single document in a collection one by one—a slow process known as a collection scan—MongoDB uses the index to jump directly to the relevant data, similar to using the index at the back of a textbook.
+Instead of searching through every single document in a collection one by one which is a slow process known as a collection scan
+MongoDB uses the index to jump directly to the relevant data, similar to using the index at the back of a textbook.
 
 */
