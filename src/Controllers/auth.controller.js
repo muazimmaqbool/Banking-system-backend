@@ -1,7 +1,10 @@
 const userModel = require("../Models/user.model");
-const { jwtAuthMiddleware, generateToken } = require("../middleware/auth.middleware");
+const {
+  jwtAuthMiddleware,
+  generateToken,
+} = require("../middleware/auth.middleware");
 const emailService = require("../services/email");
-const tokenBlackListModel=require("../Models/blackList.model")
+const tokenBlackListModel = require("../Models/blackList.model");
 
 //user register controller
 //will be used with this api: /api/auth/register
@@ -69,7 +72,7 @@ async function userLoginController(req, res) {
   //means password will not get returned that's why we select .select("+password"); so it gets returned for comparison
 
   //Note if we do this: ).select("password"); i.e not adding + prefix to password then only password is returned, no email and name
-    // console.log("user:",user)
+  // console.log("user:",user)
 
   //user is not found that's email not found in db
   if (!user) {
@@ -107,15 +110,14 @@ async function userLoginController(req, res) {
 /**
  * - User Logout Controller
  * - POST /api/auth/logout
-  */
+ */
+async function userLogoutController(req, res) {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
-async function userLogoutController(req,res){
-  const token=req.cookies.token || req.headers.authorization?.split(" ")[1]
-
-  if(!token){
+  if (!token) {
     return res.status(200).json({
-      message:"User log out successfully"
-    })
+      message: "User log out successfully",
+    });
   }
   //or
   //   if(!token){
@@ -124,15 +126,20 @@ async function userLogoutController(req,res){
   //   })
   // }
 
+  //adding token to black list so this token won't be used again i.e for hacking/unauthorized
   await tokenBlackListModel.create({
-    token:token
+    token: token,
   });
 
   res.clearCookie("token");
 
   res.status(200).json({
-        message: "User logged out successfully"
-    })
+    message: "User logged out successfully",
+  });
 }
 
-module.exports = { userRegisterController, userLoginController,userLogoutController };
+module.exports = {
+  userRegisterController,
+  userLoginController,
+  userLogoutController,
+};
