@@ -56,7 +56,7 @@ const generateToken = (userData) => {
 };
 
 //this middle ware is used inside transaction.routes.js and for /api/transactions/system/initial-funds api
-//used to check whether the loggedused is system account/system user or not
+//used to check whether the loggeduser is system account/system user or not
 const authSystemUserMiddleware = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
@@ -66,7 +66,7 @@ const authSystemUserMiddleware = async (req, res, next) => {
     });
   }
 
-    //checking is the provided token blacklisted because if the token is blacklisted then it's not valid
+  //checking is the provided token blacklisted because if the token is blacklisted then it's not valid
   //as token gets blacklisted when user logs out
   const isBlackListed = await tokenBlackListModel.findOne({
     token: token,
