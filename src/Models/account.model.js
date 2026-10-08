@@ -7,7 +7,7 @@ const accountSchema=new mongoose.Schema({
         ref:"user", // Tells Mongoose this ObjectId refers to the "user" collection (i.e in user.model.js)
         required:[true,"Account must be asscoiated with a user"],
         index:true, 
-        //the index:true will help us find/searching this account fast as their could be millions of account
+        //the index:true will help us find/searching this account fast as their could be millions of accounts
         //in mongodb we add this index:true so searching becomes fast
     },
     status:{
@@ -39,38 +39,54 @@ accountSchema.methods.getBalance = async function(){
  // balance will be calculated based on ledger type i.e:
  // ledger entries with type "DEBIT" we will add them and subtract with sum ledgers of type "CREDIT" this will give us final balance
 
- const balanceData=await ledgerModel.aggregate([
-    {$match:{account:this._id}},
-    {
-        $group:{
-            _id:null,
-            totalDebit:{
-                $sum:{
-                    $cond:[
-                        {$eq:["$type","DEBIT"]},
-                        "$amount",
-                        0
-                    ]
-                }
-            },
-            totalCredit:{
-                $sum:{
-                    $cond:[
-                        {$eq:["$type","CREDIT"]},
-                        "$amount",
-                        0
-                    ]
-                }
-            }
+ //Formula: Balance = Total Credit - Total Debit
+
+ const balanceData = await ledgerModel.aggregate([
+  // Find all ledger transactions for this account
+  {
+    $match: { account: this._id }
+  },
+
+  // Group transactions and calculate total debit and credit
+  {
+    $group: {
+      _id: null,
+
+      // Calculate total debited amount
+      totalDebit: {
+        $sum: {
+          $cond: [
+            { $eq: ["$type", "DEBIT"] },
+            "$amount",
+            0
+          ]
         }
-    },
-    {
-        $project:{
-            _id:0,
-            balance:{$subtract:["$totalCredit","$totalDebit"]}
+      },
+
+      // Calculate total credited amount
+      totalCredit: {
+        $sum: {
+          $cond: [
+            { $eq: ["$type", "CREDIT"] },
+            "$amount",
+            0
+          ]
         }
+      }
     }
- ])
+  },
+
+  // Calculate final balance: Credit - Debit
+  {
+    $project: {
+      _id: 0, // Remove MongoDB's _id field
+      balance: {
+        $subtract: ["$totalCredit", "$totalDebit"]
+      }
+    }
+  }
+]);
+
 
  //when account is new i.e no ledger entry then balanceData will be an empty array [] the we return balance as 0
  if(balanceData.length===0){
