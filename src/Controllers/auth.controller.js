@@ -68,6 +68,9 @@ async function userLoginController(req, res) {
   //.select("+password"); why we used this, because in user.model.js we have set select:false for password
   //means password will not get returned that's why we select .select("+password"); so it gets returned for comparison
 
+  //Note if we do this: ).select("password"); i.e not adding + prefix to password then only password is returned, no email and name
+    // console.log("user:",user)
+
   //user is not found that's email not found in db
   if (!user) {
     return res.status(401).json({
@@ -75,8 +78,9 @@ async function userLoginController(req, res) {
     });
   }
 
-  //user/email is found now comparing password
+  //user email is found now comparing password
   const isValidPassword = await user.comparePassword(password);
+  //comparePassword method is defined inside user.mode.js file
 
   if (!isValidPassword) {
     return res.status(401).json({
