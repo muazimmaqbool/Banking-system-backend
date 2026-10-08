@@ -9,12 +9,12 @@ const cookieParser=require("cookie-parser")
 //this app constant will have access to all express methods
 const app=express(); //creating server
 
-//using exporess.json midlleware
+//using express.json midlleware
 app.use(express.json())
-//Note: by default the express server can't ready data of req.body by default, so it inorder to make it ready req.body data we are using express.json() middleware
+//Note: by default the express server can't read data of req.body by default, so in order to make it read req.body data we are using express.json() middleware
 
 app.use(cookieParser()) 
-// middleware used to save token in cookie check auth.controller.js file
+// middleware used to save token in cookies check auth.controller.js file
 
 
 /** Importing Routes */
