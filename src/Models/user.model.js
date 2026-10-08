@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         "Invalid email address",
       ],
-      //regex i have copied from google just search email regex
+      //Note: regex i have copied from google just search email regex
     },
     name: {
       type: String,
@@ -23,10 +23,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password should contain more than 6 characters"],
-      select: false, //with select=false, whenever we fetch user data by any user query the password will not be returned by default
+      select: false, //with select:false, whenever we fetch user data by any user query the password will not be returned by default
     },
     //systemUser is used to determine whether this account/user is owned by bank
-    //if systemUser is true then it's banks own account which can be used to transfer any amount of money
+    //if systemUser is true then it's banks own account which can be used to transfer any/initial amount of money
     //as banks have the money in form of cash
     systemUser:{
       type:Boolean,
@@ -52,25 +52,7 @@ userSchema.pre("save", async function () {
   this.password = hash;
   //we converted password to hash and then saved hash in password
   return
-  //or
-  /*
-  try {
-
-    //1: generating salt (here genSalt(10) means 10 round salt, generates random string)
-    const salt = await bycrypt.genSalt(10); // we can also do this: const salt="this is a salt"; but not secure at all
-    //console.log("salt:",salt) // $2b$10$UjvORRbdKDQVh3aXB3f6wO
-
-    //2: hashing password
-    const hashedPassword = await bycrypt.hash(user.password, salt);
-
-    //3: overrides the plan password with the hashed one
-    user.password = hashedPassword;
-
-    next(); //means we have done processing now you can save in db/do further tasks
-  } catch (err) {
-    return next(err);
-  }
-  */
+  
 });
 
  //method comparePassword used to compare password entered by the user with the hashed password in db

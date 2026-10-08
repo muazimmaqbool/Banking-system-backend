@@ -4,7 +4,9 @@ const emailService = require("../services/email");
 const tokenBlackListModel=require("../Models/blackList.model")
 
 //user register controller
-//will be used with this api: /api/auth/register inside app.routes.js file
+//will be used with this api: /api/auth/register
+//it's inside app.routes.js file
+
 /**
  * - user register controller
  * - POST /api/auth/register
