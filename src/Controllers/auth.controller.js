@@ -35,7 +35,7 @@ async function userRegisterController(req, res) {
   });
 
   const payLoad = { userId: user._id };
-  //returning with jwt token
+  //returning jwt token
   const token = generateToken(payLoad);
 
   //now saving token in cookie
