@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // It's a record of each account movement.
 // Once created, it should remain append-only.
-//this is single source of truth of all your transactions
+// This is single source of truth of all your transactions
 const ledgerSchema = new mongoose.Schema(
   {
     account: {
