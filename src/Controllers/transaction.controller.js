@@ -39,9 +39,14 @@ async function createTransaction(req, res) {
   });
 
   //if the accounts are not found
-  if (!fromUserAccount || !toUserAccount) {
+  if (!fromUserAccount) {
     return res.status(400).json({
-      message: "Invalid from Account or to Account",
+      message: "Invalid from Account",
+    });
+  }
+  if (!toUserAccount) {
+    return res.status(400).json({
+      message: "Invalid to Account",
     });
   }
 
